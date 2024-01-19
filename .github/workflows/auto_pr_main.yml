@@ -1,0 +1,26 @@
+name: Auto-Generate PR from develop to main
+
+on:
+  pull_request:
+    branches:
+      - develop
+    types:
+      - closed
+
+jobs:
+  generate-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Create pull request to main
+      if: github.event.pull_request.merged == true
+      uses: thomaseizinger/create-pull-request@master
+      with:
+        github_token: ${{ secrets.PAT_CREATE_PULL_REQUEST }}
+        head: develop
+        base: main
+        title: "Auto-Generated PR from develop to main"
+        labels: auto-generated
